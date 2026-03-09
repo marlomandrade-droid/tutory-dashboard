@@ -45,23 +45,22 @@ def _create_mentoria_connection():
 @st.cache_resource(ttl=3600)
 def get_hub_connection():
     """Retorna conexão com o HUB (PostgreSQL).
-    Cached por 1 hora. Reconecta automaticamente se cair."""
+    Cached por 1 hora. Reconecta automaticamente se cair.
+    NÃO usar st.error() aqui — cache_resource replica UI calls."""
     try:
         return _create_hub_connection()
-    except Exception as e:
-        st.error(f"❌ Erro ao conectar no HUB (PostgreSQL): {e}")
+    except Exception:
         return None
 
 
 @st.cache_resource(ttl=3600)
 def get_mentoria_connection():
     """Retorna conexão com a MENTORIA (SQL Server).
-    Cached por 1 hora. Reconecta automaticamente se cair."""
+    Cached por 1 hora. Reconecta automaticamente se cair.
+    NÃO usar st.error() aqui — cache_resource replica UI calls."""
     try:
         return _create_mentoria_connection()
-    except Exception as e:
-        st.error(f"❌ Erro ao conectar na Mentoria (SQL Server): {e}")
-        st.info("💡 Verifique se o IP está liberado no Security Group da AWS.")
+    except Exception:
         return None
 
 
@@ -91,33 +90,30 @@ def _is_mentoria_alive(conn):
 
 def run_query(conn, query, params=None, db_name=""):
     """Executa uma query SQL e retorna um pandas DataFrame.
-    Se a conexão estiver morta, tenta reconectar UMA vez."""
+    Se a conexão estiver morta, tenta reconectar UMA vez.
+    Nunca mostra erros na UI (quem chama decide se/como exibir)."""
     if conn is None:
         return pd.DataFrame()
 
     try:
         return pd.read_sql(query, conn, params=params)
-    except Exception as e:
-        # Tentativa de reconexão
+    except Exception:
+        # Tentativa de reconexão silenciosa
         try:
             if db_name == "HUB":
                 get_hub_connection.clear()
                 new_conn = _create_hub_connection()
-                # Atualiza cache
-                result = pd.read_sql(query, new_conn, params=params)
-                return result
+                return pd.read_sql(query, new_conn, params=params)
             elif db_name == "Mentoria":
                 get_mentoria_connection.clear()
                 new_conn = _create_mentoria_connection()
-                result = pd.read_sql(query, new_conn, params=params)
-                return result
-        except Exception as retry_err:
-            st.warning(f"⚠️ Erro na query ({db_name}): {retry_err}")
-            get_hub_connection.clear()
-            get_mentoria_connection.clear()
+                return pd.read_sql(query, new_conn, params=params)
+        except Exception:
+            # Limpa caches para próximo rerun tentar de novo
+            if db_name == "HUB":
+                get_hub_connection.clear()
+            elif db_name == "Mentoria":
+                get_mentoria_connection.clear()
             return pd.DataFrame()
 
-        st.warning(f"⚠️ Erro na query ({db_name}): {e}")
-        get_hub_connection.clear()
-        get_mentoria_connection.clear()
         return pd.DataFrame()

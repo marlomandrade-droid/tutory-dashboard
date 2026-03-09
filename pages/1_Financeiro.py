@@ -16,6 +16,7 @@ from utils.brand import (
     CARD_BG, CARD_BG_HOVER, DIM, MUTED, BORDER, BG_DARK,
 )
 from utils.formatters import brl, brl_compact, num_br, pct, delta_pct
+from utils.db import get_hub_connection, get_mentoria_connection
 from utils.queries import (
     hub_gmv_acumulado_por_ano,
     hub_receita_mensal,
@@ -45,6 +46,18 @@ if os.path.exists(logo_path):
 
 # -- Auth --
 require_login()
+
+# -- Health check de conexoes (UMA VEZ, sem repetir) --
+_hub_ok = get_hub_connection() is not None
+_mentoria_ok = get_mentoria_connection() is not None
+
+if not _hub_ok:
+    st.error("❌ **Sem conexão com o HUB** (PostgreSQL) — dados do HUB indisponíveis.")
+if not _mentoria_ok:
+    st.warning(
+        "⚠️ **Sem conexão com a Mentoria** (SQL Server) — dados de Mentoria indisponíveis.\n\n"
+        "💡 Verifique se o IP está liberado no Security Group da AWS."
+    )
 
 
 # ══════════════════════════════════════════════════════
