@@ -1,9 +1,13 @@
 [theme]
-primaryColor = "#334EFF"
-backgroundColor = "#0a0a0f"
-secondaryBackgroundColor = "#12121e"
-textColor = "#e0e0e0"
+# Cores oficiais Tutory — Manual de Marca 2024
+primaryColor = "#334EFF"           # Azul Tutory
+backgroundColor = "#060610"        # Fundo principal (quase preto)
+secondaryBackgroundColor = "#0e0e1a"  # Cards e sidebar
+textColor = "#e8e8f0"              # Texto principal (alta legibilidade)
 font = "sans serif"
 
 [server]
 headless = true
+
+[browser]
+gatherUsageStats = false

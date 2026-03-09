@@ -35,7 +35,7 @@ from utils.queries import (
 )
 
 # -- Configuracao da pagina --
-st.set_page_config(page_title="Financeiro — Tutory", page_icon="💰", layout="wide")
+st.set_page_config(page_title="Financeiro — Tutory", page_icon="🧠", layout="wide")
 inject_custom_css()
 
 # -- Logo na sidebar --
@@ -64,101 +64,110 @@ if not _mentoria_ok:
 # CSS CUSTOMIZADO PARA O PAINEL FINANCEIRO
 # ══════════════════════════════════════════════════════
 
-st.markdown("""
+st.markdown(f"""
 <style>
-/* Cards grandes do painel financeiro */
-.fin-card {
-    background: linear-gradient(135deg, #12121e, #1a1a2e);
-    border: 1px solid #2a2a3e;
+/* ══ Cards grandes do painel financeiro ══ */
+.fin-card {{
+    background: linear-gradient(135deg, {CARD_BG}, {CARD_BG_HOVER});
+    border: 1px solid {BORDER};
     border-radius: 14px;
     padding: 24px 28px;
     margin-bottom: 8px;
-}
-.fin-card-accent {
+}}
+.fin-card-accent {{
     border-left: 4px solid;
-}
-.fin-label {
-    color: #a0a0b4;
+}}
+.fin-label {{
+    font-family: 'Inter', sans-serif;
+    color: {DIM};
     font-size: 11px;
     text-transform: uppercase;
     letter-spacing: 0.8px;
     margin: 0 0 6px 0;
-    font-weight: 600;
-}
-.fin-value {
-    color: #e0e0e0;
+    font-weight: 700;
+}}
+.fin-value {{
+    font-family: 'Inter', sans-serif;
+    color: #e8e8f0;
     font-size: 36px;
     font-weight: 800;
     margin: 0 0 4px 0;
     line-height: 1.1;
-}
-.fin-value-sm {
-    color: #e0e0e0;
+    letter-spacing: -0.5px;
+}}
+.fin-value-sm {{
+    font-family: 'Inter', sans-serif;
+    color: #e8e8f0;
     font-size: 26px;
     font-weight: 700;
     margin: 0 0 2px 0;
     line-height: 1.1;
-}
-.fin-budget {
+}}
+.fin-budget {{
+    font-family: 'Inter', sans-serif;
     font-size: 11px;
     margin: 6px 0 0 0;
-}
-.fin-delta-up { color: #00d68f; font-size: 13px; font-weight: 600; margin: 2px 0 0 0; }
-.fin-delta-down { color: #ff6b6b; font-size: 13px; font-weight: 600; margin: 2px 0 0 0; }
-.fin-sub-label {
-    color: #7a7a92;
+}}
+.fin-delta-up {{ color: {GREEN}; font-size: 13px; font-weight: 700; margin: 2px 0 0 0; font-family: 'Inter', sans-serif; }}
+.fin-delta-down {{ color: {RED}; font-size: 13px; font-weight: 700; margin: 2px 0 0 0; font-family: 'Inter', sans-serif; }}
+.fin-sub-label {{
+    font-family: 'Inter', sans-serif;
+    color: {MUTED};
     font-size: 10px;
     text-transform: uppercase;
     letter-spacing: 0.5px;
     margin: 0 0 2px 0;
-}
-.fin-sub-value {
-    color: #c0c0d4;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}}
+.fin-sub-value {{
+    font-family: 'Inter', sans-serif;
+    color: #c8c8e0;
     font-size: 20px;
     font-weight: 700;
     margin: 0;
     white-space: nowrap;
-}
-.fin-sub-label {
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
-}
-.section-title {
-    color: #a0a0b4;
-    font-size: 13px;
+}}
+.section-title {{
+    font-family: 'Inter', sans-serif;
+    color: {DIM};
+    font-size: 12px;
     font-weight: 700;
     text-transform: uppercase;
-    letter-spacing: 1px;
-    margin: 24px 0 12px 0;
-    padding-bottom: 6px;
-    border-bottom: 1px solid #2a2a3e;
-}
-/* Tabela estilizada de clientes */
-.client-tag-ok {
-    background: rgba(0,214,143,0.15);
-    color: #00d68f;
-    padding: 2px 10px;
+    letter-spacing: 1.2px;
+    margin: 28px 0 14px 0;
+    padding-bottom: 8px;
+    border-bottom: 1px solid {BORDER};
+}}
+/* ══ Tags de status de clientes ══ */
+.client-tag-ok {{
+    background: rgba(0,214,143,0.12);
+    color: {GREEN};
+    padding: 3px 12px;
     border-radius: 12px;
     font-size: 11px;
-    font-weight: 600;
-}
-.client-tag-pending {
-    background: rgba(255,149,0,0.15);
-    color: #ff9500;
-    padding: 2px 10px;
+    font-weight: 700;
+    font-family: 'Inter', sans-serif;
+}}
+.client-tag-pending {{
+    background: rgba(255,149,0,0.12);
+    color: {YELLOW};
+    padding: 3px 12px;
     border-radius: 12px;
     font-size: 11px;
-    font-weight: 600;
-}
-.client-tag-none {
-    background: rgba(255,107,107,0.15);
-    color: #ff6b6b;
-    padding: 2px 10px;
+    font-weight: 700;
+    font-family: 'Inter', sans-serif;
+}}
+.client-tag-none {{
+    background: rgba(255,107,107,0.12);
+    color: {RED};
+    padding: 3px 12px;
     border-radius: 12px;
     font-size: 11px;
-    font-weight: 600;
-}
+    font-weight: 700;
+    font-family: 'Inter', sans-serif;
+}}
 </style>
 """, unsafe_allow_html=True)
 
@@ -289,7 +298,7 @@ def mini_trend(labels, values, color=AZUL, height=100):
 st.markdown(f"""
 <div style="display: flex; justify-content: flex-end; align-items: center;
             padding: 4px 0; margin-bottom: 8px;">
-    <p style="color: {MUTED}; font-size: 11px; margin: 0; text-align: right;">
+    <p style="font-family: 'Inter', sans-serif; color: {MUTED}; font-size: 11px; margin: 0; text-align: right; letter-spacing: 0.2px;">
         💰 <b style="color: {DIM};">Painel Financeiro</b> &nbsp;·&nbsp;
         Dados em tempo real &nbsp;·&nbsp;
         {now.strftime('%d/%m/%Y %H:%M')} &nbsp;·&nbsp;
