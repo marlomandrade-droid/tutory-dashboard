@@ -1,0 +1,27 @@
+# Credenciais sensiveis - NUNCA commitar
+.streamlit/secrets.toml
+
+# Python
+__pycache__/
+*.py[cod]
+*.egg-info/
+dist/
+build/
+.eggs/
+
+# Virtual environment
+venv/
+.venv/
+env/
+
+# OS
+.DS_Store
+Thumbs.db
+
+# IDE
+.vscode/
+.idea/
+
+# Planilha do orcamento (dados sensiveis)
+# Descomente se preferir nao enviar ao GitHub:
+# config/budget_2026.xlsx

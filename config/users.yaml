@@ -1,0 +1,11 @@
+credentials:
+  usernames:
+    marlom:
+      email: marlom@tutory.com.br
+      failed_login_attempts: 0
+      first_name: Marlom
+      last_name: Andrade
+      logged_in: false
+      password: "$2b$12$kAaYb1.PPH/EI.Z0B56A9uv1EARGeBVTc4hyKIw1yADL9kiApAvPW"
+      roles:
+        - admin
